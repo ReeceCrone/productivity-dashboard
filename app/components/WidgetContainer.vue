@@ -1,56 +1,82 @@
 <template>
   <client-only>
-    <GridLayout
-      v-model:layout="layout"
-      :col-num="12"
-      :row-height="50"
-      :is-draggable="true"
-      :is-resizable="true"
-      :margin="[10, 10]"
-      :vertical-compact="false"
-    >
-      <GridItem
-        v-for="item in layout"
-        :key="item.i"
-        :i="item.i"
-        :x="item.x"
-        :y="item.y"
-        :w="item.w"
-        :h="item.h"
+    <div class="min-h-screen bg-slate-900 text-white p-6">
+      <!-- Add Widget Button -->
+      <button
+    @click="addWidget"
+    class="absolute top-4 left-4 z-10 bg-green-500 hover:bg-green-600 text-green-700 hover:text-white w-12 h-12 flex items-center justify-center rounded-full shadow transition text-2xl"
+  >
+     <PlusCircleIcon class="w-10 h-10" />
+  </button>
+
+      <!-- Grid -->
+      <GridLayout
+        v-model:layout="layout"
+        :col-num="12"
+        :row-height="50"
+        :is-draggable="true"
+        :is-resizable="true"
+        :margin="[10, 10]"
+        :vertical-compact="false"
       >
-        <div class="h-full flex flex-col justify-between relative">
-          <!-- Dynamic component rendering -->
-          <component
-            v-if="item.type"
-            :is="getComponent(item.type)"
-            class="h-full"
-          />
-          <div v-else class="bg-slate-800 rounded-lg flex items-center justify-center h-full">
-            Empty
-          </div>
+        <GridItem
+          v-for="item in layout"
+          :key="item.i"
+          :i="item.i"
+          :x="item.x"
+          :y="item.y"
+          :w="item.w"
+          :h="item.h"
+        >
+          <div
+            class="h-full flex flex-col justify-between relative bg-slate-800 rounded-lg p-3 shadow hover:shadow-lg transition"
+          >
+            <!-- Dynamic widget -->
+            <component
+              v-if="item.type"
+              :is="getComponent(item.type)"
+              class="h-full"
+            />
 
-          <!-- Controls -->
-          <div class="absolute top-1 right-1 flex gap-1">
-            <button @click="selectWidgetType(item)" class="bg-blue-500 text-white px-2 py-1 rounded text-xs">
-              Set
-            </button>
-            <button @click="removeWidget(item.i)" class="bg-red-500 text-white px-2 py-1 rounded text-xs">
-              X
-            </button>
-          </div>
-        </div>
-      </GridItem>
-    </GridLayout>
+            <!-- Empty widget placeholder -->
+            <div
+              v-else
+              class="h-full flex items-center justify-center text-slate-400"
+            >
+              Empty
+            </div>
 
-    <button @click="addWidget" class="absolute top-2 right-2 z-10 bg-green-500 text-white px-4 py-2 rounded shadow">
-      Add Widget
-    </button>
+            <!-- Remove button -->
+            <div class="absolute top-1 right-1 flex gap-1">
+              <button
+                @click="removeWidget(item.i)"
+                class="bg-blue-900 hover:bg-red-700 text-slate-800 hover:text-white w-7 h-7 flex items-center justify-center rounded-full shadow transition text-2xl"
+              >
+                <XCircleIcon class="w-6 h-6" />
+              </button>
+            </div>
+
+            <!-- Set Widget Button -->
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <button
+                v-if="!item.type"
+                @click="selectClockWidget(item)"
+                class="pointer-events-auto bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded text-xs transition"
+              >
+                Clock
+              </button>
+            </div>
+          </div>
+        </GridItem>
+      </GridLayout>
+    </div>
   </client-only>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { GridLayout, GridItem } from 'vue3-grid-layout'
+import { PlusCircleIcon, XCircleIcon} from '@heroicons/vue/24/solid'
 import ClockWidget from './widgets/ClockWidget.vue'
 
 const layout = ref([
@@ -59,20 +85,15 @@ const layout = ref([
   { i: 'c', x: 8, y: 0, w: 4, h: 3, type: null }
 ])
 
-const widgetTypes = ['ClockWidget'] // can expand later
+const widgetTypes = ['ClockWidget']
 
 function getComponent(type) {
-  const components = {
-    ClockWidget
-  }
+  const components = { ClockWidget }
   return components[type] || null
 }
 
-function selectWidgetType(item) {
-  const type = prompt(`Choose a widget type:\n${widgetTypes.join(', ')}`, item.type || '')
-  if (type && widgetTypes.includes(type)) {
-    item.type = type
-  }
+function selectClockWidget(item) {
+  item.type = 'ClockWidget'
 }
 
 function removeWidget(id) {
@@ -84,6 +105,7 @@ function addWidget() {
   layout.value.push({ i: id, x: 0, y: 0, w: 4, h: 3, type: null })
 }
 </script>
+
 
 
 
