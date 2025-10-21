@@ -3,7 +3,7 @@
     <!-- Page title -->
     <h1 class="text-3xl font-bold mb-6">My Productivity Dashboard</h1>
 
-    <!-- Widget container -->
+    <!-- Widget grid layout -->
     <WidgetContainer />
   </div>
 </template>
@@ -13,5 +13,9 @@ import WidgetContainer from '~/components/WidgetContainer.vue'
 </script>
 
 <style scoped>
-/* optional extra styles */
+/* Optional styling */
 </style>
+
+
+
+
