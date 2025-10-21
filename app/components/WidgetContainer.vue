@@ -72,6 +72,13 @@
               >
                 Note
               </button>
+              <button
+                v-if="!item.type"
+                @click="selectLabelWidget(item)"
+                class="pointer-events-auto bg-yellow-700 hover:bg-yellow-800 text-white px-3 py-1.5 rounded text-xs transition"
+              >
+                Label
+              </button>
             </div>
 
           </div>
@@ -87,17 +94,18 @@ import { GridLayout, GridItem } from 'vue3-grid-layout'
 import { PlusCircleIcon, XCircleIcon} from '@heroicons/vue/24/solid'
 import ClockWidget from './widgets/ClockWidget.vue'
 import NoteWidget from './widgets/NoteWidget.vue'
+import LabelWidget from './widgets/LabelWidget.vue'
 
 const layout = ref([
   { i: 'a', x: 0, y: 0, w: 4, h: 3, type: 'ClockWidget' },
-  { i: 'b', x: 4, y: 0, w: 4, h: 3, type: null },
-  { i: 'c', x: 8, y: 0, w: 4, h: 3, type: null }
+  { i: 'b', x: 4, y: 0, w: 4, h: 3, type: 'NoteWidget' },
+  { i: 'c', x: 8, y: 0, w: 4, h: 3, type: 'LabelWidget' }
 ])
 
-const widgetTypes = ['ClockWidget', "NoteWidget"]
+const widgetTypes = ['ClockWidget', "NoteWidget", "LabelWidget"]
 
 function getComponent(type) {
-  const components = { ClockWidget, NoteWidget }
+  const components = { ClockWidget, NoteWidget, LabelWidget }
   return components[type] || null
 }
 
@@ -107,6 +115,10 @@ function selectClockWidget(item) {
 
 function selectNoteWidget(item) {
   item.type = 'NoteWidget'
+}
+
+function selectLabelWidget(item) {
+  item.type = 'LabelWidget'
 }
 
 function removeWidget(id) {
