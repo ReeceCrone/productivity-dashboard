@@ -4,7 +4,7 @@
       <!-- Add Widget Button -->
       <button
     @click="addWidget"
-    class="absolute top-4 left-4 z-10 bg-green-500 hover:bg-green-600 text-green-700 hover:text-white w-12 h-12 flex items-center justify-center rounded-full shadow transition text-2xl"
+    class="fixed top-4 left-4 z-10 bg-green-500 hover:bg-green-600 text-green-700 hover:text-white w-12 h-12 flex items-center justify-center rounded-full shadow transition text-2xl"
   >
      <PlusCircleIcon class="w-10 h-10" />
   </button>
@@ -50,9 +50,9 @@
             <div class="absolute top-1 right-1 flex gap-1">
               <button
                 @click="removeWidget(item.i)"
-                class="bg-blue-900 hover:bg-red-700 text-slate-800 hover:text-white w-7 h-7 flex items-center justify-center rounded-full shadow transition text-2xl"
+                class="bg-slate-900 hover:bg-red-700 text-slate-800 hover:text-white w-8 h-8 flex items-center justify-center rounded-full shadow transition text-2xl"
               >
-                <XCircleIcon class="w-6 h-6" />
+                <XCircleIcon class="w-7 h-7" />
               </button>
             </div>
 
@@ -65,7 +65,15 @@
               >
                 Clock
               </button>
+              <button
+                v-if="!item.type"
+                @click="selectNoteWidget(item)"
+                class="pointer-events-auto bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1.5 rounded text-xs transition"
+              >
+                Note
+              </button>
             </div>
+
           </div>
         </GridItem>
       </GridLayout>
@@ -78,6 +86,7 @@ import { ref } from 'vue'
 import { GridLayout, GridItem } from 'vue3-grid-layout'
 import { PlusCircleIcon, XCircleIcon} from '@heroicons/vue/24/solid'
 import ClockWidget from './widgets/ClockWidget.vue'
+import NoteWidget from './widgets/NoteWidget.vue'
 
 const layout = ref([
   { i: 'a', x: 0, y: 0, w: 4, h: 3, type: 'ClockWidget' },
@@ -85,15 +94,19 @@ const layout = ref([
   { i: 'c', x: 8, y: 0, w: 4, h: 3, type: null }
 ])
 
-const widgetTypes = ['ClockWidget']
+const widgetTypes = ['ClockWidget', "NoteWidget"]
 
 function getComponent(type) {
-  const components = { ClockWidget }
+  const components = { ClockWidget, NoteWidget }
   return components[type] || null
 }
 
 function selectClockWidget(item) {
   item.type = 'ClockWidget'
+}
+
+function selectNoteWidget(item) {
+  item.type = 'NoteWidget'
 }
 
 function removeWidget(id) {
@@ -102,7 +115,47 @@ function removeWidget(id) {
 
 function addWidget() {
   const id = Date.now().toString()
-  layout.value.push({ i: id, x: 0, y: 0, w: 4, h: 3, type: null })
+  const cols = 12
+  const widgetW = 4
+  const widgetH = 3
+
+  // Make a 2D array to track occupied cells
+  const occupied = {}
+  layout.value.forEach(item => {
+    for (let x = item.x; x < item.x + item.w; x++) {
+      for (let y = item.y; y < item.y + item.h; y++) {
+        occupied[`${x},${y}`] = true
+      }
+    }
+  })
+
+  // Find the first free position
+  let found = false
+  let newX = 0
+  let newY = 0
+
+  for (let y = 0; !found; y++) {
+    for (let x = 0; x <= cols - widgetW; x++) {
+      let spaceFree = true
+      for (let dx = 0; dx < widgetW; dx++) {
+        for (let dy = 0; dy < widgetH; dy++) {
+          if (occupied[`${x + dx},${y + dy}`]) {
+            spaceFree = false
+            break
+          }
+        }
+        if (!spaceFree) break
+      }
+      if (spaceFree) {
+        newX = x
+        newY = y
+        found = true
+        break
+      }
+    }
+  }
+
+  layout.value.push({ i: id, x: newX, y: newY, w: widgetW, h: widgetH, type: null })
 }
 </script>
 
