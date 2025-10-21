@@ -1,6 +1,6 @@
 <template>
   <div class="bg-slate-800 p-6 rounded-2xl text-center shadow-md">
-    <h2 class="text-xl font-semibold mb-2">🕒 Clock</h2>
+    <h2 class="text-2xl font-mono">Clock</h2>
     <p class="text-3xl font-mono">{{ time }}</p>
   </div>
 </template>
