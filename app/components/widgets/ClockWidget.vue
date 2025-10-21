@@ -1,7 +1,8 @@
 <template>
-  <div class="bg-slate-800 p-6 rounded-2xl text-center shadow-md">
-    <h2 class="text-2xl font-mono">Clock</h2>
-    <p class="text-3xl font-mono">{{ time }}</p>
+  <div class="bg-slate-900 text-white rounded-lg flex items-center justify-center p-1">
+    <p class="bg-slate-800 rounded w-full h-full flex items-center justify-center text-3xl font-mono">
+      {{ time }}
+    </p>
   </div>
 </template>
 

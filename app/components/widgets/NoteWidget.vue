@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-slate-900 text-white rounded-lg p-1 h-full flex flex-col">
+  <div class="bg-slate-900 text-white rounded-lg p-1 h-full flex flex-col font-mono">
     <textarea
       v-model="note"
       placeholder="Write your note..."
