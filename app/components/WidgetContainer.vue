@@ -13,7 +13,7 @@
       <GridLayout
         v-model:layout="layout"
         :col-num="12"
-        :row-height="50"
+        :row-height="30"
         :is-draggable="true"
         :is-resizable="true"
         :margin="[10, 10]"
