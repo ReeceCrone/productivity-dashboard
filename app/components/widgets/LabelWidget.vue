@@ -13,3 +13,15 @@ import { ref } from 'vue'
 
 const note = ref('')
 </script>
+<style scoped>
+textarea::-webkit-scrollbar {
+  width: 6px;
+}
+textarea::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 116, 139, 0.5); /* slate-500 */
+  border-radius: 10px;
+}
+textarea::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.8); /* slate-400 */
+}
+</style>
