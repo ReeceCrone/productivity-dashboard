@@ -6,7 +6,7 @@
     @click="addWidget"
     class="fixed top-4 left-4 z-10 bg-green-500 hover:bg-green-600 text-green-700 hover:text-white w-12 h-12 flex items-center justify-center rounded-full shadow transition text-2xl"
   >
-     <PlusCircleIcon class="w-10 h-10" />
+     <PlusCircleIcon class="w-13 h-13" />
   </button>
 
       <!-- Grid -->
@@ -19,6 +19,11 @@
         :margin="[10, 10]"
         :vertical-compact="false"
       >
+      <TransitionGroup
+        tag="div"
+        name="widget"
+        class="grid-group"
+      >
         <GridItem
           v-for="item in layout"
           :key="item.i"
@@ -29,7 +34,8 @@
           :h="item.h"
         >
           <div
-            class="h-full flex flex-col justify-between relative bg-slate-800 rounded-lg p-3 shadow hover:shadow-lg transition"
+            :data-id="item.i"
+            class="h-full flex flex-col justify-between relative bg-slate-800 rounded-lg p-3 shadow hover:shadow-lg transition widget-item"
           >
             <!-- Dynamic widget -->
             <component
@@ -50,9 +56,9 @@
             <div class="absolute top-1 right-1 flex gap-1">
               <button
                 @click="removeWidget(item.i)"
-                class="bg-slate-900 hover:bg-red-700 text-slate-800 hover:text-white w-8 h-8 flex items-center justify-center rounded-full shadow transition text-2xl"
+                class="bg-slate-900 hover:bg-red-700 text-slate-800 hover:text-white w-8 h-8 flex items-center justify-center rounded-full shadow transition text-xl"
               >
-                <XCircleIcon class="w-7 h-7" />
+                <XCircleIcon class="w-9 h-9" />
               </button>
             </div>
 
@@ -79,10 +85,18 @@
               >
                 Label
               </button>
+              <button
+                v-if="!item.type"
+                @click="selectToDoWidget(item)"
+                class="pointer-events-auto bg-green-400 hover:bg-green-500 text-white px-3 py-1.5 rounded text-xs transition"
+              >
+                ToDo
+              </button>
             </div>
 
           </div>
         </GridItem>
+        </TransitionGroup>
       </GridLayout>
     </div>
   </client-only>
@@ -95,17 +109,19 @@ import { PlusCircleIcon, XCircleIcon} from '@heroicons/vue/24/solid'
 import ClockWidget from './widgets/ClockWidget.vue'
 import NoteWidget from './widgets/NoteWidget.vue'
 import LabelWidget from './widgets/LabelWidget.vue'
+import ToDoWidget from './widgets/ToDoWidget.vue'
 
 const layout = ref([
   { i: 'a', x: 0, y: 0, w: 4, h: 3, type: 'ClockWidget' },
   { i: 'b', x: 4, y: 0, w: 4, h: 3, type: 'NoteWidget' },
-  { i: 'c', x: 8, y: 0, w: 4, h: 3, type: 'LabelWidget' }
+  { i: 'c', x: 8, y: 0, w: 4, h: 3, type: 'LabelWidget' },
+  { i: 'd', x: 0, y: 3, w: 4, h: 3, type: "ToDoWidget" }
 ])
 
-const widgetTypes = ['ClockWidget', "NoteWidget", "LabelWidget"]
+const widgetTypes = ['ClockWidget', "NoteWidget", "LabelWidget", "ToDoWidget"]
 
 function getComponent(type) {
-  const components = { ClockWidget, NoteWidget, LabelWidget }
+  const components = { ClockWidget, NoteWidget, LabelWidget, ToDoWidget }
   return components[type] || null
 }
 
@@ -121,8 +137,24 @@ function selectLabelWidget(item) {
   item.type = 'LabelWidget'
 }
 
+function selectToDoWidget(item) {
+  item.type = 'ToDoWidget'
+}
+
 function removeWidget(id) {
-  layout.value = layout.value.filter(item => item.i !== id)
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if (el) {
+    el.style.setProperty("--tx", "30px");
+    el.style.setProperty("--ty", "-30px");
+
+    // Add the leave animation class manually
+    el.classList.add("suck-leave");
+
+    // Wait for the animation to finish before removing
+    setTimeout(() => {
+      layout.value = layout.value.filter(item => item.i !== id);
+    }, 600); // same as animation duration
+  }
 }
 
 function addWidget() {
@@ -170,6 +202,27 @@ function addWidget() {
   layout.value.push({ i: id, x: newX, y: newY, w: widgetW, h: widgetH, type: null })
 }
 </script>
+<style scoped>
+.suck-leave {
+  animation: suckToX 0.35s cubic-bezier(0.55, 0, 0.55, 1) forwards;
+  transform-origin: var(--origin-x, 100%) var(--origin-y, 0%);
+  z-index: 1000;
+}
+
+@keyframes suckToX {
+  0% {
+    transform: scale(1) translate(0, 0);
+    opacity: 1;
+  }
+ 
+  100% {
+    transform: scale(0);
+    opacity: 1;
+  }
+
+  
+}
+</style>
 
 
 
