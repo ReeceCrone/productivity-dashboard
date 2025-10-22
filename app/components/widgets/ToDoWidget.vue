@@ -55,9 +55,7 @@ import {XCircleIcon, PlusCircleIcon} from '@heroicons/vue/24/solid'
 
 const newItem = ref('')
 const todoItems = ref([
-  { text: 'Sample To-Do Item 1', done: false },
-  { text: 'Sample To-Do Item 2', done: true },
-  { text: 'Sample To-Do Item 3', done: false },
+
 ])
 
 function addTodo() {
