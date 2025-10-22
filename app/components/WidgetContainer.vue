@@ -19,11 +19,7 @@
         :margin="[10, 10]"
         :vertical-compact="false"
       >
-      <TransitionGroup
-        tag="div"
-        name="widget"
-        class="grid-group"
-      >
+  
         <GridItem
           v-for="item in layout"
           :key="item.i"
@@ -96,7 +92,6 @@
 
           </div>
         </GridItem>
-        </TransitionGroup>
       </GridLayout>
     </div>
   </client-only>
