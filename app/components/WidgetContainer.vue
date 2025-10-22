@@ -31,7 +31,7 @@
         >
           <div
             :data-id="item.i"
-            class="h-full flex flex-col justify-between relative bg-slate-800 rounded-lg p-3 shadow hover:shadow-lg transition widget-item"
+            class="h-full flex flex-col justify-between relative bg-slate-800 rounded-2xl rounded-br-md p-3 shadow hover:shadow-lg transition widget-item"
           >
             <!-- Dynamic widget -->
             <component
