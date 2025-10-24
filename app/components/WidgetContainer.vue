@@ -88,6 +88,14 @@
               >
                 ToDo
               </button>
+              <button
+                v-if="!item.type"
+                @click="selectSportsWidget(item)"
+                class="pointer-events-auto bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded text-xs transition"
+                >
+                Sports
+              </button>
+                
             </div>
 
           </div>
@@ -105,6 +113,7 @@ import ClockWidget from './widgets/ClockWidget.vue'
 import NoteWidget from './widgets/NoteWidget.vue'
 import LabelWidget from './widgets/LabelWidget.vue'
 import ToDoWidget from './widgets/ToDoWidget.vue'
+import SportsWidget from './widgets/SportsWidget.vue'
 
 const layout = ref([
   { i: 'a', x: 0, y: 0, w: 4, h: 3, type: 'ClockWidget' },
@@ -113,10 +122,10 @@ const layout = ref([
   { i: 'd', x: 0, y: 3, w: 4, h: 3, type: "ToDoWidget" }
 ])
 
-const widgetTypes = ['ClockWidget', "NoteWidget", "LabelWidget", "ToDoWidget"]
+const widgetTypes = ['ClockWidget', "NoteWidget", "LabelWidget", "ToDoWidget", "SportsWidget"]
 
 function getComponent(type) {
-  const components = { ClockWidget, NoteWidget, LabelWidget, ToDoWidget }
+  const components = { ClockWidget, NoteWidget, LabelWidget, ToDoWidget, SportsWidget }
   return components[type] || null
 }
 
@@ -134,6 +143,10 @@ function selectLabelWidget(item) {
 
 function selectToDoWidget(item) {
   item.type = 'ToDoWidget'
+}
+
+function selectSportsWidget(item) {
+  item.type = 'SportsWidget'
 }
 
 function removeWidget(id) {
